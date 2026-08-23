@@ -119,8 +119,9 @@ Full table with precision/recall and standard deviations:
   under the latency budget, and a modest 465 KB footprint.
 - **TabPFN achieves the highest raw accuracy (96.8%) but exceeds the
   protection budget by roughly four orders of magnitude** (~125 seconds
-  vs. a ~4 millisecond budget) and is ~445x larger on disk than Random
-  Forest, the next-largest model. Its accuracy advantage is real but
+  vs. a ~4 millisecond budget) and is ~16x larger on disk than Random
+  Forest, the next-largest model (and over 450x larger than Gradient
+  Boosting, the recommended practical model). Its accuracy advantage is real but
   irrelevant for a trip-critical decision cycle -- see below for why
   that gap is structural, not just a matter of optimizing the code.
 

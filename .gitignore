@@ -8,3 +8,10 @@ __pycache__/
 
 # Local tooling config, not part of the project
 .claude/
+
+# Manuscript drafting (Word doc + build tooling) -- not part of the
+# public code artifact, kept out of the repo intentionally.
+paper/
+node_modules/
+package.json
+package-lock.json
