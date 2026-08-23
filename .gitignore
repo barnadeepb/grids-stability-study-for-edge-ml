@@ -1,0 +1,10 @@
+# Raw dataset (downloaded by scripts/download_data.py, not tracked in git)
+data/
+
+# Python environment / caches
+.venv/
+__pycache__/
+*.pyc
+
+# Local tooling config, not part of the project
+.claude/
