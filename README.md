@@ -18,12 +18,14 @@ budget. A model that is more accurate but far larger or slower may be
 the wrong choice if it cannot fit the deployment target -- or the
 decision cycle.
 
-**The industry timing budget used here:** IEC 61850-5 defines message
-performance classes for substation automation. Trip-critical protection
-messages (Type 1A, e.g. GOOSE trip commands) are expected to be
-delivered end-to-end within roughly **4 milliseconds**. This project
-measures every model's inference latency against that real budget,
-rather than reporting latency numbers with nothing to compare them to.
+**The industry timing budget used here:** IEC 61850-5 classifies
+substation automation messages by transfer time; trips and blockings
+fall in the fastest class, TT6, at **3 milliseconds**. The corresponding
+North American standard, IEEE 1646, specifies **4 milliseconds** for
+breaker tripping and breaker failure initiation. This project adopts
+the stricter 3 ms figure as the primary budget and confirms that no
+finding changes anywhere in the 3-4 ms band the two standards span, so
+which one you use does not affect the conclusions below.
 
 ## Models compared
 
@@ -105,25 +107,28 @@ averages across the evaluation splits described above):
 Full table with precision/recall and standard deviations:
 [`results/model_comparison.csv`](results/model_comparison.csv).
 
-**Reading these against the ~4 ms protection budget:**
+**Reading these against the 3 ms protection budget** (every verdict
+below is unchanged at the 4 ms IEEE 1646 figure too):
 
 - Five of the seven models (Logistic Regression, Decision Tree, XGBoost,
   both MLP variants) fit comfortably inside the budget.
 - **Random Forest -- a common default choice in academic ML-for-grid
-  papers -- exceeds the budget by roughly 3.5x**, and is simultaneously
-  the largest model short of TabPFN (12.8 MB) and not even the most
-  accurate practical option. On this evidence it is dominated on every
-  axis by Gradient Boosting: less accurate, slower, and ~28x larger.
-- **Gradient Boosting (XGBoost) is the best practical candidate found
-  here**: highest accuracy among budget-compliant models, comfortably
-  under the latency budget, and a modest 465 KB footprint.
+  papers -- exceeds the budget by roughly 4.7x at 3 ms (3.5x at 4 ms)**,
+  and is simultaneously the largest model short of TabPFN (12.8 MB) and
+  not the most accurate practical option either. On this evidence it is
+  dominated on every axis by Gradient Boosting: less accurate, slower,
+  and ~28x larger.
+- Gradient Boosting and the Full MLP are statistically tied on accuracy
+  among budget-compliant models; the tie is broken on cost, favoring the
+  Full MLP (faster and ~6x smaller). See the paper for the full
+  decision rule.
 - **TabPFN achieves the highest raw accuracy (96.8%) but exceeds the
   protection budget by roughly four orders of magnitude** (~125 seconds
-  vs. a ~4 millisecond budget) and is ~16x larger on disk than Random
+  vs. a 3-4 millisecond budget) and is ~16x larger on disk than Random
   Forest, the next-largest model (and over 450x larger than Gradient
-  Boosting, the recommended practical model). Its accuracy advantage is real but
-  irrelevant for a trip-critical decision cycle -- see below for why
-  that gap is structural, not just a matter of optimizing the code.
+  Boosting). Its accuracy advantage is real but irrelevant for a
+  trip-critical decision cycle -- see below for why that gap is
+  structural, not just a matter of optimizing the code.
 
 Charts (SVG and PNG) for every column in the results table, plus two
 trade-off views, are in `results/`:
@@ -132,7 +137,7 @@ trade-off views, are in `results/`:
   `metric_latency_us`, `metric_size_kb` -- one chart per metric, all
   models.
 - `tradeoff_accuracy_vs_latency`, `tradeoff_accuracy_vs_size` -- accuracy
-  plotted against each deployability cost, log scale, with the ~4 ms
+  plotted against each deployability cost, log scale, with the 3 ms
   protection budget marked where relevant.
 
 ## Testing environment and its limits

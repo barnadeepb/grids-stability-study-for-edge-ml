@@ -15,3 +15,8 @@ paper/
 node_modules/
 package.json
 package-lock.json
+
+# Hugging Face release artifact (trained model + model card) -- staged
+# locally until credentials are available to publish it to Hugging Face;
+# not part of the public GitHub repo.
+huggingface_release/

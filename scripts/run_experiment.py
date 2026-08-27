@@ -323,14 +323,14 @@ def run():
     make_plots(results)
 
 
-# IEC 61850-5 defines message performance classes for substation automation;
-# trip-critical protection messages (Type 1A, e.g. GOOSE trip commands) are
-# expected to be delivered end-to-end within about 4 milliseconds. This is
-# an industry timing budget, not a number we chose -- it lets the chart show
-# which models could plausibly fit inside a real protection decision cycle,
-# rather than reporting latency with nothing to compare it to.
-PROTECTION_LATENCY_BUDGET_MS = 4.0
-PROTECTION_LATENCY_BUDGET_LABEL = "IEC 61850-5 Type 1A protection budget (~4 ms)"
+# IEC 61850-5 classifies substation automation messages by transfer time;
+# trips and blockings fall in the fastest class, TT6, at 3 milliseconds. The
+# corresponding North American standard, IEEE 1646, specifies 4 ms for the
+# same kind of message. We chart the stricter 3 ms IEC figure -- the paper
+# confirms no finding changes anywhere in the 3-4 ms band the two standards
+# span, so which one is charted does not affect the conclusions.
+PROTECTION_LATENCY_BUDGET_MS = 3.0
+PROTECTION_LATENCY_BUDGET_LABEL = "IEC 61850-5 (TT6) trip transfer-time budget (3 ms)"
 
 # Print-ready styling: a serif face to match IEEE body text, restrained sizes,
 # and hairline chrome rather than heavy gridlines/borders.
